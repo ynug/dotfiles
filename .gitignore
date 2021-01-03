@@ -1,0 +1,5 @@
+.DS_Store
+.config/anyenv/*
+.config/configstore
+.config/karabiner
+.config/QtProject

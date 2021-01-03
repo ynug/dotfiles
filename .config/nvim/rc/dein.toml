@@ -1,0 +1,63 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+# Dokerfileのシンタックス
+[[plugins]]
+repo = 'ekalinin/Dockerfile.vim'
+
+# toml
+[[plugins]]
+repo = 'cespare/vim-toml'
+
+# re:view
+[[plugins]]
+repo = 'moro/vim-review'
+
+# vim-airline
+[[plugins]]
+repo = 'vim-airline/vim-airline'
+[[plugins]]
+repo = 'vim-airline/vim-airline-themes'
+
+# vim colorscheme
+[[plugins]]
+repo ='tomasr/molokai'
+
+# Lintチェッカー
+[[plugins]]
+repo = 'w0rp/ale'
+
+# 画面分割時のwindow移動ショートカット
+[[plugins]]
+repo = 'kana/vim-submode'
+
+# typescript colorling
+[[plugins]]
+repo = 'leafgarland/typescript-vim'
+on_ft = ['typescript']
+
+# GraphQL
+[[plugins]]
+repo = 'jparise/vim-graphql'
+
+# Velocity
+[[plugins]]
+repo = 'lepture/vim-velocity'
+
+[[plugins]]
+repo = 'Shougo/denite.nvim'
+
+[[plugins]]
+repo = 'Shougo/defx.nvim'
+
+[[plugins]]
+repo = 'aklt/plantuml-syntax'
+
+[[plugins]]
+repo = 'editorconfig/editorconfig-vim'
+
+[[plugins]]
+repo = 'prabirshrestha/vim-lsp'
+
+[[plugins]]
+repo = 'mattn/vim-lsp-settings'
