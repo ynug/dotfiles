@@ -24,7 +24,7 @@ SAVEHIST=10000
 
 # プロンプト
 PROMPT="%{${fg[cyan]}%}[%~]%{${reset_color}%}
-👉 " 
+🐶 👉 " 
 
 
 # 処理が一定時間以上かかった場合に時間を表示する
@@ -116,7 +116,13 @@ setopt nonomatch
 
 # 起動時に、anyenvのコマンドがある場合初期化処理を行う
 if builtin command -v anyenv > /dev/null; then
+  export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init --path)"
+
   eval "$(anyenv init -)"
+
+  eval "$(pyenv init -)"
 fi
 
 # Androidのsdkがある場合PATHを追加する
