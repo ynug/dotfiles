@@ -16,6 +16,7 @@ colors
 git config --global user.useConfigOnly true
 git config --global --unset user.name
 git config --global --unset user.email
+git config pull.rebase false
 
 # ヒストリの設定
 HISTFILE=~/.zsh_history
@@ -24,7 +25,7 @@ SAVEHIST=10000
 
 # プロンプト
 PROMPT="%{${fg[cyan]}%}[%~]%{${reset_color}%}
-🐶 👉 " 
+👉 " 
 
 
 # 処理が一定時間以上かかった場合に時間を表示する
