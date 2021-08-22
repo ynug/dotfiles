@@ -16,7 +16,7 @@ colors
 git config --global user.useConfigOnly true
 git config --global --unset user.name
 git config --global --unset user.email
-git config pull.rebase false
+git config --global pull.rebase false
 
 # ヒストリの設定
 HISTFILE=~/.zsh_history
@@ -131,3 +131,4 @@ path=(
   ~/Library/Android/sdk/platform-tools(N-/)
   $path
 )
+export PATH="/usr/local/opt/mongodb-community@4.4/bin:$PATH"
