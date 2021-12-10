@@ -31,27 +31,15 @@ PROMPT="%{${fg[cyan]}%}[%~]%{${reset_color}%}
 # 処理が一定時間以上かかった場合に時間を表示する
 REPORTTIME=1
 
-# 単語の区切り文字を指定する
-autoload -Uz select-word-style
-select-word-style default
-# ここで指定した文字は単語区切りとみなされる
-# / も区切りと扱うので、^W でディレクトリ１つ分を削除できる
-zstyle ':zle:*' word-chars " /=;@:{},|"
-zstyle ':zle:*' word-style unspecified
-
 ########################################
 # 補完
 # 補完機能を有効にする
+fpath=(${ASDF_DIR}/completions $fpath)
 autoload -Uz compinit
 compinit
 
 # 補完で小文字でも大文字にマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-
-# sudo の後ろでコマンド名を補完する
-zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
-                     /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
-
 
 ########################################
 # vcs_info
@@ -113,18 +101,8 @@ setopt print_exit_value
 setopt nonomatch
 
 ########################################
-# キーバインド
 
-# 起動時に、anyenvのコマンドがある場合初期化処理を行う
-if builtin command -v anyenv > /dev/null; then
-  export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
-  export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init --path)"
-
-  eval "$(anyenv init -)"
-
-  eval "$(pyenv init -)"
-fi
+. /usr/local/opt/asdf/libexec/asdf.sh
 
 # Androidのsdkがある場合PATHを追加する
 path=(
