@@ -8,9 +8,9 @@ return require('packer').startup(function()
 
   use 'romgrk/barbar.nvim'
 
---  use {
---    'nvim-telescope/telescope.nvim',
---    requires = { {'nvim-lua/plenary.nvim'} }
---  }
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
 end)
 
