@@ -2,9 +2,6 @@
 # 環境変数
 export LANG=ja_JP.UTF-8
 
-# XDG Base Directory Specification
-export XDG_CONFIG_HOME=~/.config
-
 # vim は nvim を利用する
 alias vim='nvim'
 
@@ -13,10 +10,10 @@ autoload -Uz colors
 colors
 
 # git user情報はグローバルで持たずに各リポジトリで持つ
-git config --global user.useConfigOnly true
-git config --global --unset user.name
-git config --global --unset user.email
-git config --global pull.rebase false
+# git config --global user.useConfigOnly true
+# git config --global --unset user.name
+# git config --global --unset user.email
+# git config --global pull.rebase false
 
 # ヒストリの設定
 HISTFILE=~/.zsh_history
