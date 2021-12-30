@@ -99,11 +99,10 @@ setopt nonomatch
 
 ########################################
 
-. /usr/local/opt/asdf/libexec/asdf.sh
-
 # Androidのsdkがある場合PATHを追加する
 path=(
   ~/Library/Android/sdk/platform-tools(N-/)
   $path
 )
-export PATH="/usr/local/opt/mongodb-community@4.4/bin:$PATH"
+
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
