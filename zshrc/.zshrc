@@ -9,12 +9,6 @@ alias vim='nvim'
 autoload -Uz colors
 colors
 
-# git user情報はグローバルで持たずに各リポジトリで持つ
-# git config --global user.useConfigOnly true
-# git config --global --unset user.name
-# git config --global --unset user.email
-# git config --global pull.rebase false
-
 # ヒストリの設定
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
