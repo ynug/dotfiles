@@ -24,8 +24,6 @@ REPORTTIME=1
 
 ########################################
 # 補完
-# 補完機能を有効にする
-fpath=(${ASDF_DIR}/completions $fpath)
 autoload -Uz compinit
 compinit
 
