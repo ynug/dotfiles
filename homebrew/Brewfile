@@ -13,7 +13,6 @@ brew "pinentry-mac"
 brew "tree"
 brew "lnav"
 
-cask "iterm2"
 cask "font-droid-sans-mono-nerd-font"
 cask "appcleaner"
 cask "discord"
