@@ -15,7 +15,3 @@ brew "pinentry-mac"
 
 cask "font-droid-sans-mono-nerd-font"
 cask "appcleaner"
-cask "discord"
-cask "microsoft-teams"
-cask "mongodb-compass"
-cask "charles"
