@@ -88,9 +88,52 @@ require("lazy").setup({
           filters = {
             dotfiles = true,
           },
+          view = {
+            width = 80,
+          }
       })
     end
-  }
+  },
+
+  'neovim/nvim-lspconfig',
+  {
+    "williamboman/mason.nvim",
+    build = ":MasonUpdate",
+    config = function()
+      require("mason").setup({
+        ui = {
+          icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+          }
+        }
+      })
+    end
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    config = function()
+      require("mason-lspconfig").setup {
+        ensure_installed = {  },
+      }
+			require("mason-lspconfig").setup_handlers {
+        function (server_name)
+          require("lspconfig")[server_name].setup {
+            on_attach = on_attach
+          }
+        end,
+      }
+    end
+  },
+
+  'hrsh7th/nvim-cmp',
+  'hrsh7th/cmp-nvim-lsp',
+  'hrsh7th/cmp-buffer',
+  'hrsh7th/cmp-path',
+  'hrsh7th/cmp-cmdline',
+  'onsails/lspkind-nvim',
+  'ray-x/cmp-treesitter'
 })
 
 
@@ -107,8 +150,31 @@ vim.g.bufferline = {
 }
 
 
+-- lspのハンドラーに設定
+capabilities = require("cmp_nvim_lsp").default_capabilities()
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
+local cmp = require"cmp"
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert({
+    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+    ["<C-Space>"] = cmp.mapping.complete(),
+    ["<C-e>"] = cmp.mapping.close(),
+    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+  }),
+  sources = cmp.config.sources({
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+  }, {
+    { name = "buffer" },
+  })
+})
 
 vim.g.neon_style = "dark"
 vim.g.neon_italic_keyword = true
@@ -193,3 +259,4 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.number = true
+vim.opt.mouse = ""

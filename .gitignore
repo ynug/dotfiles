@@ -7,3 +7,4 @@
 .config/nvim/plugin
 .config/jgit
 .config/lnav
+.config/nvim/lazy-lock.json
