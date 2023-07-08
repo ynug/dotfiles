@@ -14,25 +14,24 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
-    'rafamadriz/neon',
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
     config = function()
-      vim.cmd[[colorscheme neon]]
+      require("tokyonight").setup({
+        style = "moon"
+      })
+      vim.cmd[[colorscheme tokyonight]]
     end
-  },
+  };
   'editorconfig/editorconfig-vim',
   {
     'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require('lualine').setup({
         options = {
-          theme = 'neon',
-
-          icons_enabled = false,
-          theme = 'dracula',
-          component_separators = { left = '|', right = '|'},
-          section_separators = { left = '', right = ''},
-          disabled_filetypes = {},
-          always_divide_middle = true,
+          theme = 'tokyonight',
         },
         sections = {
           lualine_a = {'mode'},
@@ -58,6 +57,16 @@ require("lazy").setup({
   {
     'romgrk/barbar.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      animation = true,
+      icons = {
+        filetype = {
+          costom_colors = false,
+          enabled = true,
+        },
+        pinned = { button = '📌', filename = true },
+      },
+    },
   },
   {
     'nvim-telescope/telescope.nvim',
@@ -77,6 +86,13 @@ require("lazy").setup({
     end
   },
   {
+    "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+    config = function()
+      require("telescope").load_extension "file_browser"
+    end
+  },
+  {
     'nvim-tree/nvim-tree.lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
@@ -89,7 +105,7 @@ require("lazy").setup({
             dotfiles = true,
           },
           view = {
-            width = 80,
+            width = 40,
           }
       })
     end
@@ -113,21 +129,81 @@ require("lazy").setup({
   },
   {
     "williamboman/mason-lspconfig.nvim",
+    dependencies = {
+      { "williamboman/mason.nvim" },
+      { "neovim/nvim-lspconfig" },
+    },
     config = function()
+      require('mason').setup()
       require("mason-lspconfig").setup {
-        ensure_installed = {  },
+        ensure_installed = {
+          "lua_ls", 
+          "rust_analyzer",
+          "angularls",
+          "tsserver",
+          "tflint",
+          "yamlls",
+          "jsonls",
+          "css-lsp",
+        },
       }
-			require("mason-lspconfig").setup_handlers {
-        function (server_name)
-          require("lspconfig")[server_name].setup {
-            on_attach = on_attach
+      require("mason-lspconfig").setup_handlers({
+        function (server)
+          local opts = {
+            capabilities = require("cmp_nvim_lsp").default_capabilities(
+              vim.lsp.protocol.make_client_capabilities()
+            )
           }
+          require('lspconfig')[server].setup(opts)
         end,
-      }
+      })
+
+      
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(_)
+          vim.keymap.set('n', 'K',  '<cmd>lua vim.lsp.buf.hover()<CR>')
+          vim.keymap.set('n', 'gf', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+          vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
+          vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+          vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
+          vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+          vim.keymap.set('n', 'gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
+          vim.keymap.set('n', 'gn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+          vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+          vim.keymap.set('n', 'ge', '<cmd>lua vim.diagnostic.open_float()<CR>')
+          vim.keymap.set('n', 'g]', '<cmd>lua vim.diagnostic.goto_next()<CR>')
+          vim.keymap.set('n', 'g[', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
+        end
+      })
     end
   },
 
-  'hrsh7th/nvim-cmp',
+  {
+    'hrsh7th/nvim-cmp',
+    config = function()
+      local cmp = require"cmp"
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.close(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+        }, {
+          { name = "buffer" },
+        })
+      })
+    end
+  },
   'hrsh7th/cmp-nvim-lsp',
   'hrsh7th/cmp-buffer',
   'hrsh7th/cmp-path',
@@ -137,49 +213,9 @@ require("lazy").setup({
 })
 
 
--- Set barbar's options
-vim.g.bufferline = {
-  animation = true,
-  icons = true,
-  icon_custom_colors = true,
-  icon_separator_active = '▎',
-  icon_separator_inactive = '▎',
-  icon_close_tab = '',
-  icon_close_tab_modified = '●',
-  icon_pinned = '📌',
-}
-
-
 -- lspのハンドラーに設定
-capabilities = require("cmp_nvim_lsp").default_capabilities()
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
-local cmp = require"cmp"
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping.complete(),
-    ["<C-e>"] = cmp.mapping.close(),
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-  }),
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    { name = "luasnip" },
-  }, {
-    { name = "buffer" },
-  })
-})
-
-vim.g.neon_style = "dark"
-vim.g.neon_italic_keyword = true
-vim.g.neon_italic_function = true
-vim.g.neon_transparent = true
 
 
 local map = vim.api.nvim_set_keymap
@@ -246,6 +282,7 @@ map('n', '<leader>fg', '<cmd>lua require("telescope.builtin").live_grep()<cr>', 
 map('n', '<leader>fb', '<cmd>lua require("telescope.builtin").buffers()<cr>', opts)
 map('n', '<leader>fh', '<cmd>lua require("telescope.builtin").help_tags()<cr>', opts)
 
+map('n', '<space>fb', ':Telescope file_browser path=%:p:h select_buffer=true<CR>', { noremap = true })
 
 vim.api.nvim_set_option('clipboard', 'unnamedplus')
 vim.api.nvim_win_set_option(0, 'cursorline', true)
