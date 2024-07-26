@@ -94,8 +94,10 @@ setopt nonomatch
 # Androidのsdkがある場合PATHを追加する
 path=(
   ~/Library/Android/sdk/platform-tools(N-/)
+  ~/apache-maven-3.8.7/bin/
   $path
 )
 
 . $(brew --prefix asdf)/libexec/asdf.sh
 
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
