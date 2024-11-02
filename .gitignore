@@ -8,3 +8,5 @@
 .config/jgit
 .config/lnav
 .config/nvim/lazy-lock.json
+.config/flutter
+.config/github-copilot

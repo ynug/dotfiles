@@ -94,7 +94,7 @@ setopt nonomatch
 # Androidのsdkがある場合PATHを追加する
 path=(
   ~/Library/Android/sdk/platform-tools(N-/)
-  ~/apache-maven-3.8.7/bin/
+  ~/apache-maven-3.9.9/bin/
   $path
 )
 
