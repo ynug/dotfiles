@@ -144,7 +144,7 @@ require("lazy").setup({
           "tflint",
           "yamlls",
           "jsonls",
-          "css-lsp",
+          "cssls",
         },
       }
       require("mason-lspconfig").setup_handlers({
