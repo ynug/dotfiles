@@ -95,9 +95,7 @@ setopt nonomatch
 path=(
   ~/Library/Android/sdk/platform-tools(N-/)
   ~/apache-maven-3.9.9/bin/
+  /opt/homebrew/opt/mysql-client/bin
   $path
 )
 
-. $(brew --prefix asdf)/libexec/asdf.sh
-
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"

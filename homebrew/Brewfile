@@ -2,7 +2,7 @@ tap "homebrew/bundle"
 tap "tylerbrock/saw"
 # tap "goodwithtech/r"
 
-brew "asdf"
+brew "mise"
 # brew "dive"
 brew "graphviz"
 brew "neovim"
