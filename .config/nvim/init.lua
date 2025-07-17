@@ -112,6 +112,7 @@ require("lazy").setup({
   },
 
   'neovim/nvim-lspconfig',
+
   {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
@@ -127,52 +128,51 @@ require("lazy").setup({
       })
     end
   },
+
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = {
-      { "williamboman/mason.nvim" },
-      { "neovim/nvim-lspconfig" },
+      "williamboman/mason.nvim",
+      "neovim/nvim-lspconfig",
     },
     config = function()
-      require('mason').setup()
-      require("mason-lspconfig").setup {
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      require("mason-lspconfig").setup({
         ensure_installed = {
-          "lua_ls", 
+          "lua_ls",
           "rust_analyzer",
           "angularls",
-          "tsserver",
+          "ts_ls",
           "tflint",
           "yamlls",
           "jsonls",
           "cssls",
         },
-      }
-      require("mason-lspconfig").setup_handlers({
-        function (server)
-          local opts = {
-            capabilities = require("cmp_nvim_lsp").default_capabilities(
-              vim.lsp.protocol.make_client_capabilities()
-            )
-          }
-          require('lspconfig')[server].setup(opts)
-        end,
+        handlers = {
+          function(server_name)
+            require("lspconfig")[server_name].setup({
+              capabilities = capabilities,
+            })
+          end
+        },
       })
 
-      
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(_)
-          vim.keymap.set('n', 'K',  '<cmd>lua vim.lsp.buf.hover()<CR>')
-          vim.keymap.set('n', 'gf', '<cmd>lua vim.lsp.buf.formatting()<CR>')
-          vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
-          vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
-          vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
-          vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
-          vim.keymap.set('n', 'gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
-          vim.keymap.set('n', 'gn', '<cmd>lua vim.lsp.buf.rename()<CR>')
-          vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-          vim.keymap.set('n', 'ge', '<cmd>lua vim.diagnostic.open_float()<CR>')
-          vim.keymap.set('n', 'g]', '<cmd>lua vim.diagnostic.goto_next()<CR>')
-          vim.keymap.set('n', 'g[', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
+          local map = vim.keymap.set
+          map('n', 'K',  '<cmd>lua vim.lsp.buf.hover()<CR>')
+          map('n', 'gf', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+          map('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
+          map('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+          map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
+          map('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+          map('n', 'gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
+          map('n', 'gn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+          map('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+          map('n', 'ge', '<cmd>lua vim.diagnostic.open_float()<CR>')
+          map('n', 'g]', '<cmd>lua vim.diagnostic.goto_next()<CR>')
+          map('n', 'g[', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
         end
       })
     end

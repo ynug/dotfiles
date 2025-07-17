@@ -99,3 +99,4 @@ path=(
   $path
 )
 
+eval "$(mise activate zsh)"
