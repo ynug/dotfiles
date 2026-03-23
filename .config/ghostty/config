@@ -1,8 +1,20 @@
 font-family = SF Mono
 font-family = Hiragino Kaku Gothic ProN
 font-feature = -dlig
- 
-font-size = 13
+
+font-size = 13.5
 theme = citruszest
 window-height = 50
 window-width = 130
+
+scrollback-limit = 50000000
+
+cursor-style = block
+cursor-style-blink = false
+cursor-color = cell-foreground
+cursor-text = cell-background
+shell-integration-features = no-cursor
+
+window-padding-x = 6
+window-padding-y = 4
+window-padding-balance = true

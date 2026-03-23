@@ -1,29 +1,33 @@
-tap "homebrew/bundle"
-#tap "tylerbrock/saw"
-# tap "goodwithtech/r"
-
+# Runtime / environment
 brew "mise"
-# brew "dive"
-brew "graphviz"
+
+# Development tools
 brew "neovim"
-#brew "tylerbrock/saw/saw"
+brew "graphviz"
 brew "bundletool"
 brew "cocoapods"
-# brew "goodwithtech/r/dockle"
-# brew "trivy"
-brew "tree"
-# brew "hadolint"
-brew "nkf"
+brew "mysql-client"
 
-# yazi
-brew "yazi"
-brew "ffmpeg"
-brew "sevenzip"
+# Container / Docker
+brew "docker"
+brew "docker-compose"
+brew "colima"
+brew "dive"
+
+# CLI utilities
+brew "tree"
+brew "nkf"
 brew "jq"
-brew "poppler"
 brew "fd"
 brew "ripgrep"
 brew "fzf"
 brew "zoxide"
+brew "starship"
+
+# File / media / document tools
+brew "yazi"
+brew "ffmpeg"
+brew "sevenzip"
+brew "poppler"
 brew "resvg"
 brew "imagemagick"

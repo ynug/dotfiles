@@ -1,102 +1,87 @@
 ########################################
-# 環境変数
-export LANG=ja_JP.UTF-8
+# Locale
+# opencode で文字化けするため未設定
+# export LANG=ja_JP.UTF-8
 
-# vim は nvim を利用する
+########################################
+# Editor
+# デフォルトエディタを Neovim にする
+export EDITOR='nvim'
+export VISUAL='nvim'
 alias vim='nvim'
 
-# 色を使用出来るようにする
-autoload -Uz colors
-colors
-
-# ヒストリの設定
-HISTFILE=~/.zsh_history
+########################################
+# History
+HISTFILE="${HOME}/.zsh_history"
+# メモリ上に保持するヒストリ件数
 HISTSIZE=10000
+# 履歴ファイルに保存する件数
 SAVEHIST=10000
 
-# プロンプト
-PROMPT="%{${fg[cyan]}%}[%~]%{${reset_color}%}
-👉 " 
-
-
-# 処理が一定時間以上かかった場合に時間を表示する
-REPORTTIME=1
-
 ########################################
-# 補完
-autoload -Uz compinit
-compinit
-
-# 補完で小文字でも大文字にマッチさせる
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-
-########################################
-# vcs_info
-autoload -Uz vcs_info
-autoload -Uz add-zsh-hook
-
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:*' formats '%F{green}(%s)-[%b] %c%u%f'
-zstyle ':vcs_info:*' actionformats '%F{red}(%s)-[%b|%a] %c%u%f'
-
-function _update_vcs_info_msg() {
-    LANG=en_US.UTF-8 vcs_info
-    RPROMPT="${vcs_info_msg_0_}"
-}
-add-zsh-hook precmd _update_vcs_info_msg
-
-
-########################################
-# オプション
-# 日本語ファイル名を表示可能にする
+# Shell options
+# 8bit 文字をそのまま扱う
 setopt print_eight_bit
-
-# フローコントロールを無効にする
+# Ctrl+S / Ctrl+Q のフロー制御を無効化する
 setopt no_flow_control
-
-# Ctrl+Dでzshを終了しない
+# Ctrl+D でシェルを終了しない
 setopt ignore_eof
-
-# '#' 以降をコメントとして扱う
+# コマンドライン中の # 以降をコメントとして扱う
 setopt interactive_comments
-
-# ディレクトリ名だけでcdする
+# ディレクトリ名だけで cd できるようにする
 setopt auto_cd
-
-# cd したら自動的にpushdする
-setopt auto_pushd
-# 重複したディレクトリを追加しない
-setopt pushd_ignore_dups
-
-# 同時に起動したzshの間でヒストリを共有する
+# 複数シェル間でヒストリを共有する
 setopt share_history
-
-# 同じコマンドをヒストリに残さない
+# 同じコマンドの重複履歴を減らす
 setopt hist_ignore_all_dups
-
-# スペースから始まるコマンド行はヒストリに残さない
+# 先頭がスペースのコマンドをヒストリに残さない
 setopt hist_ignore_space
-
-# ヒストリに保存するときに余分なスペースを削除する
+# ヒストリ保存時に余分な空白を詰める
 setopt hist_reduce_blanks
-
-# 戻り値が 0 以外の場合終了コードを表示
+# ヒストリファイル保存時の重複を減らす
+setopt hist_save_no_dups
+# コマンド実行ごとにヒストリへ追記する
+setopt inc_append_history
+# 非0終了時に終了コードを表示する
 setopt print_exit_value
-
-# zsh には グロッビングという機能があり特殊な文字をグロブ展開する
-# * ? [ ] は、グロブ展開の文字列で、
-# コマンドに含まれているとファイル検索処理が走ってコマンドを正しく認識しない
-# 基本的にグロッビング機能を使っていないので無効化する
+# マッチしないグロブをエラーにしない
 setopt nonomatch
 
 ########################################
+# 実行時間表示
+# 3秒以上かかったコマンドの実行時間を表示する
+REPORTTIME=3
 
-# Androidのsdkがある場合PATHを追加する
+########################################
+# PATH
+# path / PATH の重複を自動で除去する
+typeset -U path PATH
+
+# 存在するディレクトリだけ PATH の先頭へ追加する
 path=(
   ~/Library/Android/sdk/platform-tools(N-/)
-  ~/apache-maven-3.9.9/bin/
-  /opt/homebrew/opt/mysql-client/bin
+  ~/apache-maven-3.9.11/bin(N-/)
+  /opt/homebrew/opt/mysql-client/bin(N-/)
   $path
 )
 
-eval "$(mise activate zsh)"
+########################################
+# Completion
+# 補完システムを初期化する
+autoload -Uz compinit
+# 補完キャッシュを使って補完初期化を行う
+compinit -d "${HOME}/.zcompdump"
+# 小文字入力でも大文字にマッチするようにする
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+########################################
+# mise
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+########################################
+# starship
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi

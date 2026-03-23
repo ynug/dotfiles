@@ -1,0 +1,27 @@
+add_newline = true
+scan_timeout = 20
+command_timeout = 300
+follow_symlinks = false
+
+format = """
+$directory$git_branch$git_status$cmd_duration$status
+$character"""
+
+[directory]
+style = "cyan"
+truncate_to_repo = false
+
+[cmd_duration]
+min_time = 3000
+style = "yellow"
+
+[status]
+disabled = false
+format = '[\[$symbol$status\]]($style) '
+symbol = '😢'
+style = 'red'
+
+[character]
+success_symbol = "👉"
+error_symbol = "👉"
+vimcmd_symbol = "👈"
