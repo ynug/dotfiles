@@ -1,0 +1,5 @@
+[[ssh-keys]]
+vault = "Company"
+
+[[ssh-keys]]
+vault = "Personal"
