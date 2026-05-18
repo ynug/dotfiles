@@ -3,6 +3,7 @@ brew "mise"
 
 # Development tools
 brew "neovim"
+brew "tree-sitter-cli"
 brew "graphviz"
 brew "bundletool"
 brew "cocoapods"

@@ -120,27 +120,184 @@ require("lazy").setup({
   },
 
   {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = "Telescope",
-    keys = {
-      { "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "Find files" },
-      { "<leader>fg", "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
-      { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
-      { "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "Help tags" },
-    },
-    config = function()
-      require("telescope").setup({
-        defaults = {
-          file_ignore_patterns = { "node_modules" },
-        },
-        pickers = {
-          find_files = {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      picker = {
+        enabled = true,
+        sources = {
+          files = {
             hidden = true,
+            ignored = false,
+            exclude = {
+              "node_modules",
+              ".git",
+              "dist",
+              "coverage",
+            },
+          },
+          grep = {
+            hidden = true,
+            ignored = false,
+            exclude = {
+              "node_modules",
+              ".git",
+              "dist",
+              "coverage",
+            },
           },
         },
+      },
+      explorer = {
+        enabled = true,
+      },
+      notifier = {
+        enabled = true,
+      },
+      input = {
+        enabled = true,
+      },
+      quickfile = {
+        enabled = true,
+      },
+      statuscolumn = {
+        enabled = true,
+      },
+    },
+    keys = {
+      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find files" },
+      { "<leader>fg", function() Snacks.picker.grep() end, desc = "Live grep" },
+      { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>fh", function() Snacks.picker.help() end, desc = "Help" },
+  
+      { "<leader>e", function() Snacks.explorer() end, desc = "Explorer" },
+  
+      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent files" },
+      { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP symbols" },
+      { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+      { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+    },
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require("nvim-treesitter").setup({})
+  
+      local parsers = {
+        "typescript",
+        "javascript",
+        "tsx",
+        "html",
+        "css",
+        "scss",
+        "json",
+        "yaml",
+        "lua",
+        "bash",
+        "markdown",
+        "markdown_inline",
+      }
+  
+      require("nvim-treesitter").install(parsers)
+  
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("treesitter_start", { clear = true }),
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+        end,
       })
     end,
+  },
+
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    keys = {
+      {
+        "gf",
+        function()
+          require("conform").format({ async = true, lsp_format = "fallback" })
+        end,
+        desc = "Format",
+      },
+    },
+    opts = {
+      formatters_by_ft = {
+        javascript = { "prettier" },
+        javascriptreact = { "prettier" },
+        typescript = { "prettier" },
+        typescriptreact = { "prettier" },
+        html = { "prettier" },
+        css = { "prettier" },
+        scss = { "prettier" },
+        json = { "prettier" },
+        jsonc = { "prettier" },
+        yaml = { "prettier" },
+        markdown = { "prettier" },
+      },
+      format_on_save = {
+        timeout_ms = 2000,
+        lsp_format = "fallback",
+      },
+    },
+  },
+
+  {
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      signs = {
+        add = { text = "│" },
+        change = { text = "│" },
+        delete = { text = "_" },
+        topdelete = { text = "‾" },
+        changedelete = { text = "~" },
+        untracked = { text = "┆" },
+      },
+      current_line_blame = false,
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+  
+        local map = function(mode, lhs, rhs, desc)
+          vim.keymap.set(mode, lhs, rhs, {
+            buffer = bufnr,
+            silent = true,
+            desc = desc,
+          })
+        end
+  
+        map("n", "]h", gs.next_hunk, "Next git hunk")
+        map("n", "[h", gs.prev_hunk, "Prev git hunk")
+        map("n", "<leader>hs", gs.stage_hunk, "Stage hunk")
+        map("n", "<leader>hr", gs.reset_hunk, "Reset hunk")
+        map("v", "<leader>hs", function()
+          gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+        end, "Stage hunk")
+        map("v", "<leader>hr", function()
+          gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+        end, "Reset hunk")
+        map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
+        map("n", "<leader>hb", gs.blame_line, "Blame line")
+        map("n", "<leader>hd", gs.diffthis, "Diff this")
+      end,
+    },
+  },
+
+  {
+    "numToStr/Comment.nvim",
+    keys = { "gc", "gb" },
+    opts = {},
+  },
+
+  {
+    "numToStr/Comment.nvim",
+    keys = { "gc", "gb" },
+    opts = {},
   },
 
   {

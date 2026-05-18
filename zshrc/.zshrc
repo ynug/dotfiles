@@ -59,7 +59,9 @@ typeset -U path PATH
 
 # 存在するディレクトリだけ PATH の先頭へ追加する
 path=(
+  ~/.local/bin(N-/)
   ~/Library/Android/sdk/platform-tools(N-/)
+  ~/Library/Android/sdk/build-tools/35.0.0(N-/)
   ~/apache-maven-3.9.11/bin(N-/)
   /opt/homebrew/opt/mysql-client/bin(N-/)
   $path
