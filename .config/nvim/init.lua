@@ -351,51 +351,93 @@ require("lazy").setup({
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-
+  
       local ok, blink = pcall(require, "blink.cmp")
       if ok then
         capabilities = blink.get_lsp_capabilities(capabilities)
       end
-
+  
       local servers = {
         html = {},
         cssls = {},
-        ts_ls = {},
-        angularls = {},
         jsonls = {},
+  
+        vtsls = {
+          settings = {
+            typescript = {
+              preferences = {
+                importModuleSpecifier = "non-relative",
+                includePackageJsonAutoImports = "auto",
+              },
+              inlayHints = {
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = true },
+                variableTypes = { enabled = false },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                enumMemberValues = { enabled = true },
+              },
+            },
+            javascript = {
+              preferences = {
+                importModuleSpecifier = "non-relative",
+                includePackageJsonAutoImports = "auto",
+              },
+              inlayHints = {
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = true },
+                variableTypes = { enabled = false },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                enumMemberValues = { enabled = true },
+              },
+            },
+          },
+        },
+  
+        angularls = {
+          root_markers = {
+            "angular.json",
+            "project.json",
+          },
+        },
+  
         eslint = {},
         emmet_language_server = {},
       }
-
+  
       for name, conf in pairs(servers) do
         vim.lsp.config(name, vim.tbl_deep_extend("force", {
           capabilities = capabilities,
         }, conf))
         vim.lsp.enable(name)
       end
-
+  
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(ev)
           local opts = { buffer = ev.buf, silent = true }
-
-          local map = function(lhs, rhs)
-            vim.keymap.set("n", lhs, rhs, opts)
+  
+          local map = function(lhs, rhs, desc)
+            vim.keymap.set("n", lhs, rhs, vim.tbl_extend("force", opts, {
+              desc = desc,
+            }))
           end
-
-          map("K", vim.lsp.buf.hover)
-          map("gd", vim.lsp.buf.definition)
-          map("gD", vim.lsp.buf.declaration)
-          map("gr", vim.lsp.buf.references)
-          map("gi", vim.lsp.buf.implementation)
-          map("gt", vim.lsp.buf.type_definition)
-          map("gn", vim.lsp.buf.rename)
-          map("ga", vim.lsp.buf.code_action)
-          map("ge", vim.diagnostic.open_float)
-          map("g]", vim.diagnostic.goto_next)
-          map("g[", vim.diagnostic.goto_prev)
+  
+          map("K", vim.lsp.buf.hover, "Hover")
+          map("gd", vim.lsp.buf.definition, "Go to definition")
+          map("gD", vim.lsp.buf.declaration, "Go to declaration")
+          map("gr", vim.lsp.buf.references, "References")
+          map("gi", vim.lsp.buf.implementation, "Implementation")
+          map("gt", vim.lsp.buf.type_definition, "Type definition")
+          map("gn", vim.lsp.buf.rename, "Rename")
+          map("ga", vim.lsp.buf.code_action, "Code action")
+          map("ge", vim.diagnostic.open_float, "Line diagnostics")
+          map("g]", vim.diagnostic.goto_next, "Next diagnostic")
+          map("g[", vim.diagnostic.goto_prev, "Previous diagnostic")
+  
           map("gf", function()
-            vim.lsp.buf.format({ async = true })
-          end)
+            require("conform").format({ async = true, lsp_format = "fallback" })
+          end, "Format")
         end,
       })
     end,
