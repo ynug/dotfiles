@@ -10,3 +10,4 @@
 .config/nvim/lazy-lock.json
 .config/flutter
 .config/github-copilot
+.config/opencode
